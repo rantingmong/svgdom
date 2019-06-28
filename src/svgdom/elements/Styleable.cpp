@@ -226,6 +226,9 @@ StyleValue Styleable::parseStylePropertyValue(StyleProperty_e type, const std::s
 		case StyleProperty_e::VISIBILITY:
 			v = StyleValue::parseVisibility(str);
 			break;
+        case StyleProperty_e::MIX_BLEND_MODE:
+            v = StyleValue::parseMixBlendMode(str);
+            break;
 	}
 	return v;
 }
@@ -381,6 +384,7 @@ std::map<std::string, StyleProperty_e> stringToPropertyMap = {
 	{"marker-end", StyleProperty_e::MARKER_END},
 	{"marker-mid", StyleProperty_e::MARKER_MID},
 	{"marker-start", StyleProperty_e::MARKER_START},
+    {"mix-blend-mode", StyleProperty_e::MIX_BLEND_MODE},
 	{"mask", StyleProperty_e::MASK},
 	{"opacity", StyleProperty_e::OPACITY},
 	{"overflow", StyleProperty_e::OVERFLOW},
@@ -655,6 +659,46 @@ std::string StyleValue::displayToString()const {
 }
 
 namespace{
+    std::map<std::string, BlendMode_e> stringToBlendModeMap = {
+        {"normal", BlendMode_e::NORMAL},
+        {"multiply", BlendMode_e::MULTIPLY},
+        {"screen", BlendMode_e::SCREEN},
+        {"overlay", BlendMode_e::OVERLAY},
+        {"darken", BlendMode_e::DARKEN},
+        {"lighten", BlendMode_e::LIGHTEN},
+        {"color-dodge", BlendMode_e::COLOR_DODGE},
+        {"color-burn", BlendMode_e::COLOR_BURN},
+        {"hard-light", BlendMode_e::HARD_LIGHT},
+        {"soft-light", BlendMode_e::SOFT_LIGHT},
+        {"difference", BlendMode_e::DIFFERENCE},
+        {"exclusion", BlendMode_e::EXCLUSION},
+        {"hue", BlendMode_e::HUE},
+        {"saturation", BlendMode_e::SATURATION},
+        {"color", BlendMode_e::COLOR},
+        {"luminosity", BlendMode_e::LUMINOSITY},
+    };
+}
+namespace{
+    auto blendModeToStringMap = utki::flipMap(stringToBlendModeMap);
+}
+
+StyleValue StyleValue::parseMixBlendMode(const std::string &str) {
+    
+    StyleValue ret;
+    
+    auto i = stringToBlendModeMap.find(str);
+    if (i == stringToBlendModeMap.end()) {
+        ret.blendMode = BlendMode_e::NORMAL;
+    } else {
+        ret.blendMode = i->second;
+    }
+
+    ret.type = Type_e::NORMAL;
+
+    return ret;
+}
+
+namespace{
 std::map<std::string, Visibility_e> stringToVisibilityMap = {
 	{"visible", Visibility_e::VISIBLE},
 	{"hidden", Visibility_e::HIDDEN},
@@ -682,6 +726,7 @@ StyleValue StyleValue::parseVisibility(const std::string& str){
 	
 	return ret;
 }
+
 
 std::string StyleValue::visibilityToString() const {
 	auto i = visibilityToStringMap.find(this->visibility);

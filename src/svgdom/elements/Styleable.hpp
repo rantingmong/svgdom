@@ -79,6 +79,7 @@ enum class StyleProperty_e{
 	KERNING,
 	TEXT_ANCHOR,				//60
 	WRITING_MODE,
+    MIX_BLEND_MODE,
 	
 	ENUM_SIZE
 };
@@ -141,6 +142,25 @@ enum class Visibility_e{
 	VISIBLE,
 	HIDDEN,
 	COLLAPSE
+};
+
+enum class BlendMode_e {
+    NORMAL,
+    MULTIPLY,
+    SCREEN,
+    OVERLAY,
+    DARKEN,
+    LIGHTEN,
+    COLOR_DODGE,
+    COLOR_BURN,
+    HARD_LIGHT,
+    SOFT_LIGHT,
+    DIFFERENCE,
+    EXCLUSION,
+    HUE,
+    SATURATION,
+    COLOR,
+    LUMINOSITY
 };
 
 enum class EnableBackground_e{
@@ -222,6 +242,7 @@ struct StyleValue{
 		Display_e display;
 		EnableBackground enableBackground;
 		Visibility_e visibility;
+        BlendMode_e blendMode;
 	};
 
 	/**
@@ -245,6 +266,8 @@ struct StyleValue{
 	static StyleValue parsePaint(const std::string& str);
 	std::string paintToString()const;
 
+    static StyleValue parseMixBlendMode(const std::string& str);
+    
 	static StyleValue parseColorInterpolation(const std::string& str);
 	
 	static StyleValue parseDisplay(const std::string& str);
